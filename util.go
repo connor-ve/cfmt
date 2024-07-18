@@ -77,11 +77,15 @@ func resetAnsi() string {
 func Print(hex string, a ...any) {
 	ansi := NewAnsiFMT()
 	color := ansi.parseFormat(hex)
-	r, g, b, err := inputValidate(strings.ToLower(color))
-	if err != nil {
-		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	ansiCode := ""
+	if len(color) != 0 {
+		r, g, b, err := inputValidate(strings.ToLower(color))
+		if err != nil {
+			log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+		}
+		ansiCode = rgbToAnsi(r, g, b, ansi.Background)
 	}
-	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
+
 	var a_string string
 	if len(a) == 1 {
 		a_string = fmt.Sprint(a[0])
@@ -152,6 +156,7 @@ func Println(hex string, a ...any) {
 }
 
 func (this *AnsiFMT) parseFormat(inputString string) string {
+	inputString = strings.Replace(inputString, " ", "", -1)
 	if strings.Contains(inputString, "!") {
 		this.Bold = true
 		inputString = strings.Replace(inputString, "!", "", -1)
