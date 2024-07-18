@@ -121,6 +121,11 @@ str := cfmt.Sprintf("!red", "Hello %s", "World")
 str := fmt.Sprintf("Hello %s", "World")
 ```
 
+## To Do List
+
+- Adding formatters for objects or numbers specifically
+- Append Functions
+
 ## Contributing
 
 `To Be Made`
