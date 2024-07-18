@@ -133,54 +133,45 @@ func Sprintf(hex string, format string, a ...any) string {
 	return fmt.Sprint(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
-// func Println(hex string, a ...any) {
-// 	// hex, bold := checkBold(hex)
-// 	r, g, b, err := inputValidate(hex)
-// 	if err != nil {
-// 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
-// 	}
-// 	ansiCode := rgbToAnsi(r, g, b)
-// 	var a_string string
-// 	if len(a) == 1 {
-// 		a_string = fmt.Sprint(a[0])
-// 	} else {
-// 		a_string = fmt.Sprint(a...)
-// 	}
-// 	fmt.Println(ansiCode + a_string + resetAnsi())
-// }
+func Println(hex string, a ...any) {
+	ansi := NewAnsiFMT()
+	color := ansi.parseFormat(hex)
+	r, g, b, err := inputValidate(strings.ToLower(color))
+	if err != nil {
+		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	}
+	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
+	var a_string string
+	if len(a) == 1 {
+		a_string = fmt.Sprint(a[0])
+	} else {
+		a_string = fmt.Sprint(a...)
+	}
 
-// func Printrc(hex string, a ...any) {
-// 	// hex, bold := checkBold(hex)
-// 	r, g, b, err := inputValidate(hex)
-// 	if err != nil {
-// 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
-// 	}
-// 	ansiCode := rgbToAnsi(r, g, b)
-// 	a_string := fmt.Sprint(a...)
-// 	fmt.Print("\r" + ansiCode + a_string + resetAnsi())
-// }
+	fmt.Println(ansi.configFormat() + ansiCode + a_string + resetAnsi())
+}
 
 func (this *AnsiFMT) parseFormat(inputString string) string {
-	if strings.Index(inputString, "!") >= 0 {
+	if strings.Contains(inputString, "!") {
 		this.Bold = true
 		inputString = strings.Replace(inputString, "!", "", -1)
 	}
-	if strings.Index(inputString, "->") >= 0 {
+	if strings.Contains(inputString, "->") {
 		this.Background = true
 		inputString = strings.Replace(inputString, "->", "", -1)
 	}
 
-	if strings.Index(inputString, "/") >= 0 {
+	if strings.Contains(inputString, "/") {
 		this.Italic = true
 		inputString = strings.Replace(inputString, "/", "", -1)
 	}
 
-	if strings.Index(inputString, "-") >= 0 {
+	if strings.Contains(inputString, "-") {
 		this.Strikethrough = true
 		inputString = strings.Replace(inputString, "-", "", -1)
 	}
 
-	if strings.Index(inputString, "_") >= 0 {
+	if strings.Contains(inputString, "_") {
 		this.Underline = true
 		inputString = strings.Replace(inputString, "_", "", -1)
 	}
