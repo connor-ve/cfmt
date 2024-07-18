@@ -117,14 +117,3 @@ var Colors = map[string]string{
 	"azure":                "ccffff",
 	"white":                "ffffff",
 }
-
-// func main() {
-// 	// Example usage
-// 	colorName := "maroon"
-// 	hexValue, exists := Colors[colorName]
-// 	if !exists {
-// 		fmt.Printf("Color name %s not found\n", colorName)
-// 	} else {
-// 		fmt.Printf("The hex value for %s is %s\n", colorName, hexValue)
-// 	}
-// }

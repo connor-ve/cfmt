@@ -8,7 +8,29 @@ import (
 	"strings"
 )
 
-func checkInput(hexString string) (int, int, int, error) {
+type AnsiFMT struct {
+	Background    bool
+	Bold          bool
+	Italic        bool
+	Underline     bool
+	Strikethrough bool
+}
+
+// Default is set to foreground
+func NewAnsiFMT() AnsiFMT {
+	ansiFMT := AnsiFMT{}
+	ansiFMT.Background = false
+	ansiFMT.Bold = false
+	ansiFMT.Italic = false
+	ansiFMT.Underline = false
+	ansiFMT.Strikethrough = false
+	return ansiFMT
+}
+
+/*
+Validates Hexidecimal versus Text input
+*/
+func inputValidate(hexString string) (int, int, int, error) {
 
 	if hexValue, ok := models.Colors[hexString]; ok {
 		return hexToRGB(hexValue)
@@ -17,6 +39,10 @@ func checkInput(hexString string) (int, int, int, error) {
 	}
 }
 
+/*
+Ansi Escape Codes work for color with RGB not Hex
+This converts to a value we can color the string with
+*/
 func hexToRGB(hexString string) (int, int, int, error) {
 	if poundChck := strings.Index(hexString, "#"); poundChck >= 0 {
 		hexString = hexString[1:]
@@ -33,16 +59,14 @@ func hexToRGB(hexString string) (int, int, int, error) {
 	return int(bytes[0]), int(bytes[1]), int(bytes[2]), nil
 }
 
-func rgbToAnsi(r, g, b int) string {
-	return fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
-}
-
-func brightAnsi(a bool) string {
-	if a {
-		return "\033[1m" 
-	} else {
-		return ""
+/*
+Output of hexToRGB is now a string that can dictacte color in ANSI
+*/
+func rgbToAnsi(r int, g int, b int, back bool) string {
+	if back {
+		return fmt.Sprintf("\033[48;2;%d;%d;%dm", r, g, b)
 	}
+	return fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
 }
 
 func resetAnsi() string {
@@ -51,82 +75,132 @@ func resetAnsi() string {
 
 // Implementation of print from fmt using color inputs
 func Print(hex string, a ...any) {
-	hex, bold := checkBold(hex)
-	r, g, b, err := checkInput(hex)
+	ansi := NewAnsiFMT()
+	color := ansi.parseFormat(hex)
+	r, g, b, err := inputValidate(strings.ToLower(color))
 	if err != nil {
 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
 	}
-
-	ansiCode := rgbToAnsi(r, g, b)
+	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	var a_string string
 	if len(a) == 1 {
 		a_string = fmt.Sprint(a[0])
 	} else {
 		a_string = fmt.Sprint(a...)
 	}
-	fmt.Print(brightAnsi(bold) + ansiCode + a_string + resetAnsi())
+
+	fmt.Print(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
 func Sprint(hex string, a ...any) string {
-	hex, bold := checkBold(hex)
-	r, g, b, err := checkInput(hex)
+	ansi := NewAnsiFMT()
+	color := ansi.parseFormat(hex)
+	r, g, b, err := inputValidate(strings.ToLower(color))
 	if err != nil {
 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
 	}
-
-	ansiCode := rgbToAnsi(r, g, b)
+	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	var a_string string
 	if len(a) == 1 {
 		a_string = fmt.Sprint(a[0])
 	} else {
 		a_string = fmt.Sprint(a...)
 	}
-	return fmt.Sprint(brightAnsi(bold) + ansiCode + a_string + resetAnsi())
+	return fmt.Sprint(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
 func Printf(hex string, format string, a ...any) {
-	// hex, bold := checkBold(hex)
-	// r, g, b, err := hexToRGB(hex)
-	// if err != nil {
-	// 	log.Fatalf("Failed to convert hex to RGB: %s\n", err)
-	// }
-	// ansiCode := rgbToAnsi(r, g, b)
-	// a_string := fmt.Sprint(a)
-	// fmt.Println(ansiCode + a_string + resetAnsi())
-}
-
-func Println(hex string, a ...any) {
-	// hex, bold := checkBold(hex)
-	r, g, b, err := checkInput(hex)
+	ansi := NewAnsiFMT()
+	color := ansi.parseFormat(hex)
+	r, g, b, err := inputValidate(strings.ToLower(color))
 	if err != nil {
 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
 	}
-	ansiCode := rgbToAnsi(r, g, b)
-	var a_string string
-	if len(a) == 1 {
-		a_string = fmt.Sprint(a[0])
-	} else {
-		a_string = fmt.Sprint(a...)
-	}
-	fmt.Println(ansiCode + a_string + resetAnsi())
+	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
+	a_string := fmt.Sprintf(format, a...)
+	fmt.Println(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
-func Printrc(hex string, a ...any) {
-	// hex, bold := checkBold(hex)
-	r, g, b, err := checkInput(hex)
+func Sprintf(hex string, format string, a ...any) string {
+	ansi := NewAnsiFMT()
+	color := ansi.parseFormat(hex)
+	r, g, b, err := inputValidate(strings.ToLower(color))
 	if err != nil {
 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
 	}
-	ansiCode := rgbToAnsi(r, g, b)
-	a_string := fmt.Sprint(a...)
-	fmt.Print("\r" + ansiCode + a_string + resetAnsi())
+	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
+	a_string := fmt.Sprintf(format, a...)
+	return fmt.Sprint(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
-func checkBold(hex string) (string, bool) {
-	bold := false
-	if boldChck := strings.Index(hex, "!"); boldChck >= 0 {
-		hex = hex[:len(hex)-1]
-		bold = true
+// func Println(hex string, a ...any) {
+// 	// hex, bold := checkBold(hex)
+// 	r, g, b, err := inputValidate(hex)
+// 	if err != nil {
+// 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+// 	}
+// 	ansiCode := rgbToAnsi(r, g, b)
+// 	var a_string string
+// 	if len(a) == 1 {
+// 		a_string = fmt.Sprint(a[0])
+// 	} else {
+// 		a_string = fmt.Sprint(a...)
+// 	}
+// 	fmt.Println(ansiCode + a_string + resetAnsi())
+// }
+
+// func Printrc(hex string, a ...any) {
+// 	// hex, bold := checkBold(hex)
+// 	r, g, b, err := inputValidate(hex)
+// 	if err != nil {
+// 		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+// 	}
+// 	ansiCode := rgbToAnsi(r, g, b)
+// 	a_string := fmt.Sprint(a...)
+// 	fmt.Print("\r" + ansiCode + a_string + resetAnsi())
+// }
+
+func (this *AnsiFMT) parseFormat(inputString string) string {
+	if strings.Index(inputString, "!") >= 0 {
+		this.Bold = true
+		inputString = strings.Replace(inputString, "!", "", -1)
 	}
-	return hex, bold
+	if strings.Index(inputString, "->") >= 0 {
+		this.Background = true
+		inputString = strings.Replace(inputString, "->", "", -1)
+	}
+
+	if strings.Index(inputString, "/") >= 0 {
+		this.Italic = true
+		inputString = strings.Replace(inputString, "/", "", -1)
+	}
+
+	if strings.Index(inputString, "-") >= 0 {
+		this.Strikethrough = true
+		inputString = strings.Replace(inputString, "-", "", -1)
+	}
+
+	if strings.Index(inputString, "_") >= 0 {
+		this.Underline = true
+		inputString = strings.Replace(inputString, "_", "", -1)
+	}
+
+	return inputString
+}
+
+func (this *AnsiFMT) configFormat() string {
+	format := ""
+	if this.Bold {
+		format += "\033[1m"
+	}
+	if this.Italic {
+		format += "\033[3m"
+	}
+	if this.Underline {
+		format += "\033[4m"
+	}
+	if this.Strikethrough {
+		format += "\033[9m"
+	}
+	return format
 }

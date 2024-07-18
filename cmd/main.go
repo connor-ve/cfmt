@@ -2,7 +2,8 @@ package main
 
 import (
 	"cfmt"
-	"fmt"
+
+	_ "fmt"
 )
 
 type Person struct {
@@ -15,10 +16,6 @@ func main() {
 		Name: "Leah Peck",
 		Age:  24,
 	}
-	cfmt.Print("red!", leah)
-
-	x := cfmt.Sprint("red", "Hwllo")
-	y := cfmt.Sprint("red!", "Hwllo")
-	fmt.Println(y + x + y)
+	cfmt.Printf("ReD", "Hello World %d", leah.Age)
 
 }
