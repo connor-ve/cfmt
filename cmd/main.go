@@ -1,8 +1,9 @@
 package main
 
 import (
-	"cfmt"
 	_ "fmt"
+
+	cfmt "github.com/connor-ve/cfmt"
 )
 
 type MockData struct {
@@ -11,5 +12,5 @@ type MockData struct {
 }
 
 func main() {
-	cfmt.Print("->bl !u/e", "HelloWorld")
+	cfmt.Print("", "HelloWorld")
 }

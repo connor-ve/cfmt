@@ -125,6 +125,7 @@ str := fmt.Sprintf("Hello %s", "World")
 
 - Adding formatters for objects or numbers specifically
 - Append Functions
+- Check compatability with MacOs and Linux
 
 ## Contributing
 

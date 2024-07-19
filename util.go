@@ -1,7 +1,7 @@
 package cfmt
 
 import (
-	"cfmt/models"
+	"github.com/connor-ve/cfmt/models"
 	"encoding/hex"
 	"fmt"
 	"log"
@@ -99,11 +99,14 @@ func Print(hex string, a ...any) {
 func Sprint(hex string, a ...any) string {
 	ansi := NewAnsiFMT()
 	color := ansi.parseFormat(hex)
-	r, g, b, err := inputValidate(strings.ToLower(color))
-	if err != nil {
-		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	ansiCode := ""
+	if len(color) != 0 {
+		r, g, b, err := inputValidate(strings.ToLower(color))
+		if err != nil {
+			log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+		}
+		ansiCode = rgbToAnsi(r, g, b, ansi.Background)
 	}
-	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	var a_string string
 	if len(a) == 1 {
 		a_string = fmt.Sprint(a[0])
@@ -116,11 +119,14 @@ func Sprint(hex string, a ...any) string {
 func Printf(hex string, format string, a ...any) {
 	ansi := NewAnsiFMT()
 	color := ansi.parseFormat(hex)
-	r, g, b, err := inputValidate(strings.ToLower(color))
-	if err != nil {
-		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	ansiCode := ""
+	if len(color) != 0 {
+		r, g, b, err := inputValidate(strings.ToLower(color))
+		if err != nil {
+			log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+		}
+		ansiCode = rgbToAnsi(r, g, b, ansi.Background)
 	}
-	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	a_string := fmt.Sprintf(format, a...)
 	fmt.Println(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
@@ -128,11 +134,14 @@ func Printf(hex string, format string, a ...any) {
 func Sprintf(hex string, format string, a ...any) string {
 	ansi := NewAnsiFMT()
 	color := ansi.parseFormat(hex)
-	r, g, b, err := inputValidate(strings.ToLower(color))
-	if err != nil {
-		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	ansiCode := ""
+	if len(color) != 0 {
+		r, g, b, err := inputValidate(strings.ToLower(color))
+		if err != nil {
+			log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+		}
+		ansiCode = rgbToAnsi(r, g, b, ansi.Background)
 	}
-	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	a_string := fmt.Sprintf(format, a...)
 	return fmt.Sprint(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
@@ -140,11 +149,14 @@ func Sprintf(hex string, format string, a ...any) string {
 func Println(hex string, a ...any) {
 	ansi := NewAnsiFMT()
 	color := ansi.parseFormat(hex)
-	r, g, b, err := inputValidate(strings.ToLower(color))
-	if err != nil {
-		log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+	ansiCode := ""
+	if len(color) != 0 {
+		r, g, b, err := inputValidate(strings.ToLower(color))
+		if err != nil {
+			log.Fatalf("Failed to convert hex to RGB: %s\n", err)
+		}
+		ansiCode = rgbToAnsi(r, g, b, ansi.Background)
 	}
-	ansiCode := rgbToAnsi(r, g, b, ansi.Background)
 	var a_string string
 	if len(a) == 1 {
 		a_string = fmt.Sprint(a[0])
