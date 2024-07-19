@@ -1,14 +1,15 @@
 package cfmt
 
 import (
-	"github.com/connor-ve/cfmt/models"
 	"encoding/hex"
 	"fmt"
 	"log"
 	"strings"
+
+	"github.com/connor-ve/cfmt/models"
 )
 
-type AnsiFMT struct {
+type ansiFMT struct {
 	Background    bool
 	Bold          bool
 	Italic        bool
@@ -17,8 +18,8 @@ type AnsiFMT struct {
 }
 
 // Default is set to foreground
-func NewAnsiFMT() AnsiFMT {
-	ansiFMT := AnsiFMT{}
+func NewAnsiFMT() ansiFMT {
+	ansiFMT := ansiFMT{}
 	ansiFMT.Background = false
 	ansiFMT.Bold = false
 	ansiFMT.Italic = false
@@ -167,7 +168,7 @@ func Println(hex string, a ...any) {
 	fmt.Println(ansi.configFormat() + ansiCode + a_string + resetAnsi())
 }
 
-func (this *AnsiFMT) parseFormat(inputString string) string {
+func (this *ansiFMT) parseFormat(inputString string) string {
 	inputString = strings.Replace(inputString, " ", "", -1)
 	if strings.Contains(inputString, "!") {
 		this.Bold = true
@@ -196,7 +197,7 @@ func (this *AnsiFMT) parseFormat(inputString string) string {
 	return inputString
 }
 
-func (this *AnsiFMT) configFormat() string {
+func (this *ansiFMT) configFormat() string {
 	format := ""
 	if this.Bold {
 		format += "\033[1m"
