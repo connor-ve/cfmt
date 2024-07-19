@@ -1,6 +1,6 @@
 # cfmt
 
-_add small badges_
+_godoc on its way_
 
 ---
 
@@ -133,24 +133,24 @@ str := fmt.Sprintf("Hello %s", "World")
 
 ## Contributing
 
-Please refer to the CONTRIBUTING.md under the docs directory. 
+Please refer to the CONTRIBUTING.md under the docs directory.
 
-Overall all PRs are welcome! 
+Overall all PRs are welcome!
 
 ## FAQ
 
 > Why not use fatih/color?
 
-Valid, personally I was a user of this package, and found it very helpful when I began programming in Go. I urge you to check out fatih/color to see if it offers more of what you are looking for. 
+Valid, personally I was a user of this package, and found it very helpful when I began programming in Go. I urge you to check out fatih/color to see if it offers more of what you are looking for.
 
-Personally the reason for this package, was to allow me to use the most comfortable way of giving color to a word, HexCode. With a large background in CSS, I felt uncomfortable being limited to the colors that fatih/color gives us and missed being able to pass my memorized HexCodes in. Also, I felt the use of a struct, with specific methods forced me to learn another package and how it did things. Although fatih does make his docs and overly code structure easy to solve, I strived to make cfmt, identically to fmt in function as it will likely be the first package a developer learns. Adding a simple parameter to the front already known calls to handle text decoration and color makes it overly simple to add flair to your outputs. 
+Personally the reason for this package, was to allow me to use the most comfortable way of giving color to a word, HexCode. With a large background in CSS, I felt uncomfortable being limited to the colors that fatih/color gives us and missed being able to pass my memorized HexCodes in. Also, I felt the use of a struct, with specific methods forced me to learn another package and how it did things. Although fatih does make his docs and overly code structure easy to solve, I strived to make cfmt, identically to fmt in function as it will likely be the first package a developer learns. Adding a simple parameter to the front already known calls to handle text decoration and color makes it overly simple to add flair to your outputs.
 
 > Is this just a fmt wrapper?
 
-yes, but it works right? Basic functionality needed to stay the same to get the desired simplicity out of its use. 
+yes, but it works right? Basic functionality needed to stay the same to get the desired simplicity out of its use.
 
-If you are looking for innovation or creativity look to our internal folder `coolfmt` where I have implemented more experimental outputs. I also hope to add "terminal components" to `coolfmt`, like loading bars and selectable lists. 
+If you are looking for innovation or creativity look to our internal folder `coolfmt` where I have implemented more experimental outputs. I also hope to add "terminal components" to `coolfmt`, like loading bars and selectable lists.
 
 > What is the c in cfmt?
 
-It stands for color... or connor... or cool... or creative. I have gon through many iterations. Lets just say it has duality. 
+It stands for color... or connor... or cool... or creative. I have gon through many iterations. Lets just say it has duality.
